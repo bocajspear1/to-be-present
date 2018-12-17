@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Levels/LevelBase.tscn" type="PackedScene" id=1]
+[ext_resource path="res://test_tileset.tres" type="TileSet" id=2]
+
+[node name="LevelGridTop" instance=ExtResource( 1 )]
+
+[node name="LevelGrid" parent="." index="0"]
+
+position = Vector2( 32, 32 )
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 32, 32 )
+cell_custom_transform = Transform2D( 100, 0, 0.5, 20, 0, 0 )
+_sections_unfolded = [ "Cell", "Occluder", "Transform" ]
+
+[node name="YSort" parent="LevelGrid" index="0"]
+
+position = Vector2( 1.10803, 0 )
+
+

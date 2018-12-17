@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Levels/LevelBase.gd" type="Script" id=1]
+
+[node name="LevelGridTop" type="Node" index="0"]
+
+script = ExtResource( 1 )
+_sections_unfolded = [ "Transform" ]
+turns_left = 25
+grid_height = 5
+grid_width = 5
+
+[node name="LevelGrid" type="TileMap" parent="." index="0"]
+
+mode = 0
+tile_set = null
+cell_size = Vector2( 64, 64 )
+cell_quadrant_size = 16
+cell_custom_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+cell_half_offset = 2
+cell_tile_origin = 0
+cell_y_sort = false
+cell_clip_uv = false
+collision_use_kinematic = false
+collision_friction = 1.0
+collision_bounce = 0.0
+collision_layer = 1
+collision_mask = 1
+occluder_light_mask = 1
+format = 1
+tile_data = PoolIntArray(  )
+_sections_unfolded = [ "Cell" ]
+
+[node name="YSort" type="YSort" parent="LevelGrid" index="0"]
+
+sort_enabled = true
+
+[node name="Moving" type="Node" parent="LevelGrid/YSort" index="0"]
+
+[node name="People" type="Node" parent="LevelGrid/YSort" index="1"]
+
+[node name="Static" type="Node" parent="LevelGrid/YSort" index="2"]
+
+[node name="Gifts" type="Node" parent="LevelGrid/YSort" index="3"]
+
+[node name="Homes" type="Node" parent="LevelGrid/YSort" index="4"]
+
+

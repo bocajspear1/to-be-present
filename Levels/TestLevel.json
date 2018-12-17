@@ -1,0 +1,57 @@
+{
+	"height": 10,
+	"width": 10,
+	"map": [
+		[
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"}
+		],
+		[
+			{"type": "open", "sprite": "house1", "person_id": 1},
+			{"type": "open", "sprite": "dirtroad_hor"},
+			{"type": "open", "sprite": "dirtroad_hor"},
+			{"type": "open", "sprite": "dirtroad_ld"},
+			{"type": "open", "sprite": "dirtroad_ld"},
+			{"type": "open", "sprite": "snow"},
+			{"type": "open", "sprite": "snow"},
+		],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			{"type": "open", "sprite": "snow"}, 
+			{"type": "open", "sprite": "snow", "gift_id": 1}
+		],
+		[
+			{"type": "open", "sprite": "road", "moving": "car", "path": [[1,0],[1,0],[1,0],[-1,0],[-1,0],[-1,0]]},
+			{"type": "open", "sprite": "road"},
+			{"type": "open", "sprite": "road"},
+			{"type": "open", "sprite": "snow"},
+			{"type": "house", "sprite": "snow", "home_id": 1},
+		],
+		[
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"},
+			{"type": "static", "sprite": "tree1"}
+		]
+	]
+}

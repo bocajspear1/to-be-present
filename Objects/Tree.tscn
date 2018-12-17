@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Objects/StaticObject.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Sprites/testtree.png" type="Texture" id=2]
+
+[node name="StaticObject" instance=ExtResource( 1 )]
+
+x_loc = 0
+y_loc = 0
+
+[node name="ObjectSprite" parent="." index="0"]
+
+texture = ExtResource( 2 )
+
+

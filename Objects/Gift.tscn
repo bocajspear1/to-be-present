@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Objects/Gift.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/testgift.png" type="Texture" id=2]
+
+[node name="Gift" type="Node"]
+
+script = ExtResource( 1 )
+x_loc = 0
+y_loc = 0
+
+[node name="GiftSprite" type="Sprite" parent="." index="0"]
+
+texture = ExtResource( 2 )
+
+

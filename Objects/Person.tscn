@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Objects/MovingObject.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Objects/Person.gd" type="Script" id=2]
+
+[node name="MovingObject" instance=ExtResource( 1 )]
+
+script = ExtResource( 2 )
+
+[node name="ClickArea" type="Control" parent="Pivot" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -16.0
+margin_top = -16.0
+margin_right = 16.0
+margin_bottom = 16.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[connection signal="gui_input" from="Pivot/ClickArea" to="." method="_on_ClickArea_gui_input"]
+
+
