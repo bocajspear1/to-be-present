@@ -3,6 +3,8 @@ extends Node
 func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
+	$CurrentLevel.load_level_file(1)
+	$MusicPlayer.playing = true
 	pass
 
 #func _process(delta):
@@ -28,6 +30,7 @@ func _input(event):
 				# Process the player's people
 				for person in $CurrentLevel/LevelGrid/YSort/People.get_children():
 					person.undo()
+					person.set_shown()
 			elif event.scancode == KEY_LEFT:
 				if person != null:
 					person.set_next_movement([-1, 0])

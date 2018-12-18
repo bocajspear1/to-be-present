@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Levels/LevelBase.gd" type="Script" id=1]
 
-[node name="LevelGridTop" type="Node" index="0"]
+[node name="LevelGridTop" type="Node"]
 
 script = ExtResource( 1 )
 _sections_unfolded = [ "Transform" ]
@@ -44,5 +44,9 @@ sort_enabled = true
 [node name="Gifts" type="Node" parent="LevelGrid/YSort" index="3"]
 
 [node name="Homes" type="Node" parent="LevelGrid/YSort" index="4"]
+
+[node name="Buttons" type="Node" parent="LevelGrid/YSort" index="5"]
+
+[node name="Gates" type="Node" parent="LevelGrid/YSort" index="6"]
 
 

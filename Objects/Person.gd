@@ -4,6 +4,7 @@ signal person_click(event, unit)
 
 var person_id = 0
 var does_have_gift = false
+var at_home = false
 
 func _ready():
 	# Called when the node is added to the scene for the first time.
@@ -29,4 +30,17 @@ func toggle_gift():
 
 func _on_ClickArea_gui_input(ev):
 	if ev.is_pressed():
+		$Pivot/Sprite.modulate = Color(0,1,0)
 		emit_signal("person_click", ev, self)
+
+func set_shown():
+	$Pivot/Sprite.show()
+	at_home = false
+
+func set_at_home():
+	print("home1")
+	$Pivot/Sprite.hide()
+	at_home = true
+	
+func is_at_home():
+	return at_home

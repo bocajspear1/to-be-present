@@ -28,3 +28,9 @@ func turn_done():
 	var next_path = car_path[current]
 	current += 1
 	set_next_movement(next_path)
+	
+func undo_done():
+	if current == 0:
+		current = len(car_path)-1
+	else:
+		current -= 1

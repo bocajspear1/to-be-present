@@ -6,6 +6,8 @@ var PERSON_SCENE = load("res://Objects/Person.tscn")
 var CAR_SCENE = load("res://Objects/Car.tscn")
 var GIFT_SCENE = load("res://Objects/Gift.tscn")
 var HOME_SCENE = load("res://Objects/PersonHome.tscn")
+var BUTTON_SCENE = load("res://Objects/Button.tscn")
+var GATE_SCENE = load("res://Objects/Gate.tscn")
 
 export var turns_left = 25
 export var grid_height = 5
@@ -17,7 +19,6 @@ var selected_person = null
 
 
 func _ready():
-	load_level(1)
 	pass
 
 #func _process(delta):
@@ -28,33 +29,79 @@ func _ready():
 func get_selected_person():
 	return selected_person
 
-func process_turn():
+
+func _open_gate(id):
+	for gate in $LevelGrid/YSort/Gates.get_children():
+		if gate.get_gate_id() == id:
+			gate.open_gate()
+
+func _close_gate(id):
+	for gate in $LevelGrid/YSort/Gates.get_children():
+		if gate.get_gate_id() == id:
+			gate.close_gate()
 	
+func _check_button(object):
+	for button in $LevelGrid/YSort/Buttons.get_children():
+		for person in $LevelGrid/YSort/People.get_children():
+			if person.x_loc == button.x_loc and person.y_loc == button.y_loc:
+				_open_gate(button.get_button_id())
+				return
+		
+		for object in $LevelGrid/YSort/Moving.get_children():
+			if object.x_loc == button.x_loc and object.y_loc == button.y_loc:
+				_open_gate(button.get_button_id())
+				return
+		# Check if button is being moved off of
+		
+		_close_gate(button.get_button_id())
+
+func _check_gate(new_loc):
+	for gate in $LevelGrid/YSort/Gates.get_children():
+		# Check if button is being moved off of
+		if gate.x_loc == new_loc[0] and gate.y_loc == new_loc[1]:
+			if gate.is_open():
+				return true
+			else:
+				return false
+	
+	return true
+			
+
+func process_turn():
 	# Check everybody has a move
 	for person in $LevelGrid/YSort/People.get_children():
 		var movement = person.get_next_movement()
 		if movement[0] == 0 and movement [1] == 0:
 			return false
-		
+	
+	
+	
+	
 	# First process the moving objects
 	for object in $LevelGrid/YSort/Moving.get_children():
 		var movement = object.get_next_movement()
 		var new_loc = [object.x_loc + movement[0], object.y_loc + movement[1]]
-		object.move_on_grid(new_loc)
+		_check_button(object)
+		
+		if _check_gate(new_loc):
+			object.move_on_grid(new_loc)
 		object.turn_done()
+		_check_button(object)
 	
 	# Process the player's people
 	for person in $LevelGrid/YSort/People.get_children():
 		var movement = person.get_next_movement()
 		var new_loc = [person.x_loc + movement[0], person.y_loc + movement[1]]
 		
+		_check_button(person)
 		
 		# Check we are on a present
 		for gift in $LevelGrid/YSort/Gifts.get_children():
 			if gift.is_taken():
 				continue
 			if gift.x_loc == new_loc[0] and gift.y_loc == new_loc[1]:
-				if gift.get_gift_id() == person.get_person_id():
+				if gift.gift_id == person.person_id:
+					print("got gift")
 					person.toggle_gift()
 					gift.set_gift_taken()
 				else:
@@ -63,15 +110,18 @@ func process_turn():
 		# Check we are on a home
 		for home in $LevelGrid/YSort/Homes.get_children():
 			if home.x_loc == new_loc[0] and home.y_loc == new_loc[1]:
-				if home.get_home_id() == person.get_person_id() and person.has_gift():
+				if home.home_id == person.person_id and person.has_gift():
+					print("Home!")
 					$LevelGrid/YSort/Homes.remove_child(person)
 				else:
+					print("Home, but no gift")
 					return true
 				
 			
 					
-					
-		person.move_on_grid(new_loc)
+		if _check_gate(new_loc):			
+			person.move_on_grid(new_loc)
+		_check_button(person)
 		
 	return true
 
@@ -103,9 +153,91 @@ func can_move_on_grid(grid_pos):
 	#target.move_to([grid_x, grid_y], real_pos)
 	
 	# Do stuff here is grid tile is special (gift, end)
+
+func _load_level(level_data):
+	grid_height = level_data['height']
+	grid_width = level_data['width']
 	
+	for line_num in grid_width:
+		var line = level_data['map'][line_num]
+		for col_num in grid_height:
+			
+			if col_num >= len(line):
+				continue
+				
+			var col = line[col_num]
+			var type = col['type']
+			var sprite = col['sprite']
+			
+			if type == 'static':
+				# Spawn in an item
+				if sprite == 'tree':
+					$LevelGrid.set_cell(col_num, line_num, 2)
+					var tree = TREE_SCENE.instance()
+					$LevelGrid/YSort/Static.add_child(tree)
+					print($LevelGrid.map_to_world(Vector2(col_num, line_num)))
+					tree.set_position(convert_grid_to_pos(col_num, line_num))
+					tree.x_loc = col_num
+					tree.y_loc = line_num
+			elif type == 'open':
+				var sprite_id = -1
+				if sprite == 'dirt':
+					sprite_id = 0
+				elif sprite == "road":
+					sprite_id = 3
+				elif sprite == "snow":
+					sprite_id = 4
+				$LevelGrid.set_cell(col_num, line_num, sprite_id)
+				if col.has("person"):
+					var person = PERSON_SCENE.instance()
+					$LevelGrid/YSort/People.add_child(person)
+					person.set_position(convert_grid_to_pos(col_num, line_num))
+					person.connect("person_click", self, "_on_person_click")
+					person.x_loc = col_num
+					person.y_loc = line_num
+					person.person_id = col['person']
+				elif col.has("moving"):
+					if col['moving'] == 'car':
+						var car = CAR_SCENE.instance()
+						$LevelGrid/YSort/Moving.add_child(car)
+						car.set_position(convert_grid_to_pos(col_num, line_num))
+						car.x_loc = col_num
+						car.y_loc = line_num
+						car.set_path(col['path'])
+						car.turn_done()
+				elif col.has("button"):
+					var button = BUTTON_SCENE.instance()
+					$LevelGrid/YSort/Buttons.add_child(button)
+					button.set_position(convert_grid_to_pos(col_num, line_num))
+					button.x_loc = col_num
+					button.y_loc = line_num
+					button.button_id = col['button']
+				elif col.has("gate"):
+					var gate = GATE_SCENE.instance()
+					$LevelGrid/YSort/Gates.add_child(gate)
+					gate.set_position(convert_grid_to_pos(col_num, line_num))
+					gate.x_loc = col_num
+					gate.y_loc = line_num
+					gate.gate_id = col['gate']
+						
+				elif col.has("gift"):
+					var gift = GIFT_SCENE.instance()
+					$LevelGrid/YSort/Gifts.add_child(gift)
+					gift.set_position(convert_grid_to_pos(col_num, line_num))
+					gift.x_loc = col_num
+					gift.y_loc = line_num
+					gift.gift_id = col['gift']
+			elif type == 'house':
+				var home = HOME_SCENE.instance()
+				$LevelGrid/YSort/Homes.add_child(home)
+				home.set_position(convert_grid_to_pos(col_num, line_num))
+				home.x_loc = col_num
+				home.y_loc = line_num
+				home.set_home_id(col['home'])			
+			else:
+				pass
 	
-func load_level(level_num):
+func load_level_file(level_num):
 	if typeof(level_num) != TYPE_INT:
 		return 
 	var file = File.new()
@@ -115,67 +247,7 @@ func load_level(level_num):
 	var result_json = JSON.parse(file_text)
 
 	if result_json.error == OK:
-		level_data = result_json.result
-		grid_height = level_data['height']
-		grid_width = level_data['width']
-		
-		for line_num in grid_width:
-			var line = level_data['map'][line_num]
-			for col_num in grid_height:
-				
-				if col_num < len(line):
-					var col = line[col_num]
-					var type = col['type']
-					var sprite = col['sprite']
-					
-					if type == 'static':
-						# Spawn in an item
-						if sprite.begins_with('tree'):
-							$LevelGrid.set_cell(col_num, line_num, 3)
-							var tree = TREE_SCENE.instance()
-							$LevelGrid/YSort/Static.add_child(tree)
-							print($LevelGrid.map_to_world(Vector2(col_num, line_num)))
-							tree.set_position(convert_grid_to_pos(col_num, line_num))
-							tree.x_loc = col_num
-							tree.y_loc = line_num
-					elif type == 'open':
-						var sprite_id = -1
-						if sprite.begins_with('dirtroad'):
-							sprite_id = 1
-						elif sprite == "snow":
-							sprite_id = 5
-						$LevelGrid.set_cell(col_num, line_num, sprite_id)
-						if col.has("person_id"):
-							var person = PERSON_SCENE.instance()
-							$LevelGrid/YSort/People.add_child(person)
-							person.set_position(convert_grid_to_pos(col_num, line_num))
-							person.connect("person_click", self, "_on_person_click")
-							person.x_loc = col_num
-							person.y_loc = line_num
-						if col.has("moving"):
-							if col['moving'] == 'car':
-								var car = CAR_SCENE.instance()
-								$LevelGrid/YSort/Moving.add_child(car)
-								car.set_position(convert_grid_to_pos(col_num, line_num))
-								car.x_loc = col_num
-								car.y_loc = line_num
-								car.set_path(col['path'])
-								car.turn_done()
-						if col.has("gift_id"):
-							var gift = GIFT_SCENE.instance()
-							$LevelGrid/YSort/Gifts.add_child(gift)
-							gift.set_position(convert_grid_to_pos(col_num, line_num))
-							gift.x_loc = col_num
-							gift.y_loc = line_num
-					elif type == 'house':
-						var home = HOME_SCENE.instance()
-						$LevelGrid/YSort/Homes.add_child(home)
-						home.set_position(convert_grid_to_pos(col_num, line_num))
-						home.x_loc = col_num
-						home.y_loc = line_num
-						home.set_home_id(col['home_id'])
-				else:
-					pass
+		_load_level(result_json.result)
 			
 			
 		

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/snow-is-falling.wav-cfb3b8b4a2cfb456dcd96700074fca97.sample"
+
+[deps]
+
+source_file="res://Sounds/snow-is-falling.wav"
+dest_files=[ "res://.import/snow-is-falling.wav-cfb3b8b4a2cfb456dcd96700074fca97.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=true
+compress/mode=0

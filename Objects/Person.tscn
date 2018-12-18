@@ -23,6 +23,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
+_sections_unfolded = [ "Visibility" ]
 
 [connection signal="gui_input" from="Pivot/ClickArea" to="." method="_on_ClickArea_gui_input"]
 

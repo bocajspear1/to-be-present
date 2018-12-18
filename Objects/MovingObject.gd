@@ -33,6 +33,9 @@ func set_next_movement(movement):
 		$Pointer.rotation_degrees = 90
 	elif movement[0] == 0 and movement[1] < 0:
 		$Pointer.rotation_degrees = 270
+	elif movement[0] == 0 and movement[1] == 0:
+		$Pointer.hide()
+		return
 	next_move = movement
 	
 func clear_next_movement():
@@ -48,8 +51,9 @@ func undo():
 		x_loc = last_pos[0]
 		y_loc = last_pos[1]
 		var grid = get_parent().get_parent().get_parent().get_parent()
-		$Pivot.position = grid.convert_grid_to_pos(last_pos[0], last_pos[1])
+		set_position(grid.convert_grid_to_pos(last_pos[0], last_pos[1]))
 		history.pop_back()
+		undo_done()
 
 func move_on_grid(grid_pos):
 	history.append([x_loc, y_loc])
@@ -62,6 +66,8 @@ func move_on_grid(grid_pos):
 func turn_done():
 	pass
 
+func undo_done():
+	pass
 
 
 

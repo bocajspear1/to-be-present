@@ -13,12 +13,6 @@ func _ready():
 
 func set_position(pos):
 	$GiftSprite.position = pos
-	
-func set_gift_id(id):
-	gift_id = id
-	
-func get_gift_id():
-	return gift_id
 
 func is_taken():
 	return taken

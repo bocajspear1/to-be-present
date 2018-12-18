@@ -10,9 +10,13 @@ config_version=3
 
 [application]
 
-config/name="ToBePresent"
-run/main_scene="res://LevelScreen.tscn"
-config/icon="res://icon.png"
+config/name="To Be Present..."
+run/main_scene="res://StartMenu.tscn"
+config/icon="res://Sprites/gift.png"
+
+[display]
+
+window/size/resizable=false
 
 [rendering]
 
